@@ -15,6 +15,8 @@ struct SetRecord: Identifiable, Equatable {
 enum WorkoutPhase: Equatable {
     /// Antes de empezar el ejercicio.
     case idle
+    /// Cuenta regresiva para acomodarse antes de la primera serie.
+    case countdown(start: Date, end: Date)
     /// Cronómetro de serie corriendo.
     case working(start: Date)
     /// Temporizador de descanso corriendo hasta `end`.
@@ -27,6 +29,7 @@ enum WorkoutPhase: Equatable {
 /// recibe siempre la hora actual para poder probarse de forma determinista.
 struct WorkoutEngine {
     static let restRange: ClosedRange<TimeInterval> = 5...600
+    static let countdownDuration: TimeInterval = 5
 
     var restDuration: TimeInterval = 60
     private(set) var phase: WorkoutPhase = .idle
@@ -34,7 +37,30 @@ struct WorkoutEngine {
     private(set) var exerciseStart: Date?
     private(set) var exerciseEnd: Date?
 
+    /// Lo que ocurrió en un `tick`.
+    enum TickEvent {
+        case none
+        /// Terminó la cuenta regresiva y arrancó la serie 1.
+        case exerciseStarted
+        /// Terminó un descanso y arrancó la siguiente serie.
+        case restFinished
+    }
+
     // MARK: Acciones
+
+    /// Inicia la cuenta regresiva previa a la primera serie.
+    mutating func startCountdown(at now: Date) {
+        sets = []
+        exerciseStart = nil
+        exerciseEnd = nil
+        phase = .countdown(start: now, end: now.addingTimeInterval(Self.countdownDuration))
+    }
+
+    /// Salta la cuenta regresiva y arranca la serie 1 ya.
+    mutating func skipCountdown(at now: Date) {
+        guard case .countdown = phase else { return }
+        startExercise(at: now)
+    }
 
     mutating func startExercise(at now: Date) {
         sets = []
@@ -53,13 +79,20 @@ struct WorkoutEngine {
         phase = .resting(start: now, end: now.addingTimeInterval(restDuration))
     }
 
-    /// Avanza el reloj. Si el descanso terminó, arranca la siguiente serie
-    /// en el instante exacto en que acabó el descanso y devuelve `true`.
+    /// Avanza el reloj. Si terminó la cuenta regresiva o un descanso, arranca
+    /// la serie en el instante exacto en que acabó (no cuando se notó).
     @discardableResult
-    mutating func tick(at now: Date) -> Bool {
-        guard case let .resting(_, end) = phase, now >= end else { return false }
-        startNextSet(at: end)
-        return true
+    mutating func tick(at now: Date) -> TickEvent {
+        switch phase {
+        case let .countdown(_, end) where now >= end:
+            startExercise(at: end)
+            return .exerciseStarted
+        case let .resting(_, end) where now >= end:
+            startNextSet(at: end)
+            return .restFinished
+        default:
+            return .none
+        }
     }
 
     /// Termina el descanso antes de tiempo y arranca la siguiente serie.
@@ -91,6 +124,10 @@ struct WorkoutEngine {
         case .resting:
             // El descanso tras la última serie no cuenta.
             break
+        case .countdown:
+            // Aún no empezó: volver al inicio.
+            reset()
+            return
         case .idle, .finished:
             return
         }
@@ -125,6 +162,19 @@ struct WorkoutEngine {
     func setElapsed(at now: Date) -> TimeInterval {
         guard case let .working(start) = phase else { return 0 }
         return max(0, now.timeIntervalSince(start))
+    }
+
+    func countdownRemaining(at now: Date) -> TimeInterval {
+        guard case let .countdown(_, end) = phase else { return 0 }
+        return max(0, end.timeIntervalSince(now))
+    }
+
+    /// Fracción de cuenta regresiva transcurrida (0 → 1).
+    func countdownProgress(at now: Date) -> Double {
+        guard case let .countdown(start, end) = phase else { return 0 }
+        let total = end.timeIntervalSince(start)
+        guard total > 0 else { return 1 }
+        return min(1, max(0, now.timeIntervalSince(start) / total))
     }
 
     func restRemaining(at now: Date) -> TimeInterval {

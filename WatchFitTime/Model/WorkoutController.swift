@@ -34,11 +34,23 @@ final class WorkoutController {
 
     // MARK: Acciones del usuario
 
+    /// Botón Iniciar: cuenta regresiva para acomodarse y luego serie 1.
     func startExercise() {
-        engine.startExercise(at: .now)
+        engine.startCountdown(at: .now)
+        lastCountdownSecond = nil
         runtime.start()
         startTimer()
+        Haptics.countdownTick()
+    }
+
+    func skipCountdown() {
+        engine.skipCountdown(at: .now)
         Haptics.setStarted()
+    }
+
+    /// Cancela durante la cuenta regresiva y vuelve al inicio.
+    func cancelCountdown() {
+        reset()
     }
 
     func finishSet() {
@@ -94,17 +106,33 @@ final class WorkoutController {
     private func tick() {
         let now = Date.now
 
-        if case .resting = engine.phase {
+        switch engine.phase {
+        case .countdown:
+            // Un clic por cada segundo de la cuenta.
+            let remaining = Int(engine.countdownRemaining(at: now).rounded(.up))
+            if remaining >= 1, remaining != lastCountdownSecond {
+                if lastCountdownSecond != nil { Haptics.countdownTick() }
+                lastCountdownSecond = remaining
+            }
+        case .resting:
             let remaining = Int(engine.restRemaining(at: now).rounded(.up))
             if (1...3).contains(remaining), remaining != lastCountdownSecond {
                 lastCountdownSecond = remaining
                 Haptics.countdownTick()
             }
+        default:
+            break
         }
 
-        if engine.tick(at: now) {
+        switch engine.tick(at: now) {
+        case .exerciseStarted:
+            lastCountdownSecond = nil
+            Haptics.setStarted()
+        case .restFinished:
             RestNotifier.cancel()
             Haptics.restFinished()
+        case .none:
+            break
         }
     }
 

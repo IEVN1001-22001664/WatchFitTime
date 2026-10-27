@@ -8,7 +8,7 @@ struct ContentView: View {
     private var isActive: Bool {
         switch controller.phase {
         case .working, .resting: true
-        case .idle, .finished: false
+        case .idle, .countdown, .finished: false
         }
     }
 
@@ -17,6 +17,7 @@ struct ContentView: View {
             Group {
                 switch controller.phase {
                 case .idle: SetupView()
+                case .countdown: CountdownView()
                 case .working: WorkView()
                 case .resting: RestView()
                 case .finished: SummaryView()
@@ -24,6 +25,14 @@ struct ContentView: View {
             }
             .animation(.easeInOut(duration: 0.2), value: controller.phase)
             .toolbar {
+                if case .countdown = controller.phase {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button(action: controller.cancelCountdown) {
+                            Image(systemName: "xmark")
+                        }
+                        .accessibilityLabel("Cancelar")
+                    }
+                }
                 if isActive {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button {
