@@ -118,7 +118,7 @@ final class WorkoutController {
             let remaining = Int(engine.restRemaining(at: now).rounded(.up))
             if (1...3).contains(remaining), remaining != lastCountdownSecond {
                 lastCountdownSecond = remaining
-                Haptics.countdownTick()
+                Haptics.restWarning()
             }
         default:
             break

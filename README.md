@@ -13,6 +13,10 @@ App para Apple Watch (watchOS 10+, SwiftUI) para controlar tiempos de series y d
    - En los últimos 3 s el reloj hace *clic*; al terminar vibra/suena y **arranca automáticamente el cronómetro de la siguiente serie**.
 4. **Terminar ejercicio** – botón 🏁 arriba a la derecha (con confirmación). Detiene todos los relojes y muestra el resumen: series, repeticiones, tiempo total, tiempo en serie y en descanso, y el detalle de cada serie.
 
+## Vibraciones
+
+Botón de onda (arriba a la izquierda en el inicio) › elige un patrón para cada fase: cuenta inicial, inicio y fin de serie, últimos 3 s de descanso y fin del descanso. Al tocar un patrón se reproduce. watchOS no permite subir la intensidad desde una app; para más fuerza en todo el reloj: Ajustes › Sonidos y vibración › Vibración destacada.
+
 ## Estructura
 
 ```
