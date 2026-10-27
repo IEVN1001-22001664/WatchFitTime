@@ -20,14 +20,14 @@ struct RestView: View {
                         .rotationEffect(.degrees(-90))
                     VStack(spacing: 0) {
                         Text("DESCANSO")
-                            .font(.system(size: 10, weight: .semibold))
+                            .font(.system(size: 8, weight: .semibold))
                             .foregroundStyle(.blue)
                         Text(remaining.countdownString)
-                            .font(.system(size: 30, weight: .semibold, design: .rounded))
+                            .font(.system(size: 26, weight: .semibold, design: .rounded))
                             .monospacedDigit()
                     }
                 }
-                .frame(height: 78)
+                .frame(height: 70)
 
                 repsEditor(setNumber: engine.currentSetNumber, reps: engine.lastReps)
 

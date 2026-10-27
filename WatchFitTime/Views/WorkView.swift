@@ -21,27 +21,22 @@ struct WorkView: View {
                         .foregroundStyle(.secondary)
                         .monospacedDigit()
                 }
+                .padding(.horizontal, 6)
 
                 Spacer(minLength: 0)
 
                 HStack(alignment: .firstTextBaseline, spacing: 0) {
                     Text(elapsed.clockString)
-                        .font(.system(size: 54, weight: .semibold, design: .rounded))
+                        .font(.system(size: 48, weight: .semibold, design: .rounded))
                     if !isLuminanceReduced {
                         Text(".\(elapsed.tenths)")
-                            .font(.system(size: 26, weight: .medium, design: .rounded))
+                            .font(.system(size: 24, weight: .medium, design: .rounded))
                             .foregroundStyle(.secondary)
                     }
                 }
                 .monospacedDigit()
                 .minimumScaleFactor(0.5)
                 .lineLimit(1)
-
-                if engine.lastReps > 0 {
-                    Text("Anterior: \(engine.lastReps) reps")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                }
 
                 Spacer(minLength: 0)
 
@@ -52,6 +47,15 @@ struct WorkView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.orange)
+            }
+            .overlay(alignment: .bottom) {
+                // Encima del botón, sin quitarle altura al cronómetro.
+                if engine.lastReps > 0 {
+                    Text("Anterior: \(engine.lastReps) \(engine.lastReps == 1 ? "rep" : "reps")")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .padding(.bottom, 48)
+                }
             }
         }
     }

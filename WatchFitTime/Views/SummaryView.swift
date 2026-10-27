@@ -46,7 +46,9 @@ struct SummaryView: View {
                 Label("Nuevo ejercicio", systemImage: "arrow.counterclockwise")
                     .frame(maxWidth: .infinity)
             }
-            .listRowBackground(Color.green.opacity(0.3))
+            .buttonStyle(.borderedProminent)
+            .tint(.green)
+            .listRowBackground(Color.clear)
         }
         .navigationTitle("Resumen")
     }
