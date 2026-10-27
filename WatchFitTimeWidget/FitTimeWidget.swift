@@ -7,6 +7,8 @@ struct FitTimeWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: "FitTimeShortcut", provider: ShortcutProvider()) { _ in
             FitTimeComplicationView()
+                // Es un atajo sin datos: nunca mostrar el recuadro gris de marcador.
+                .unredacted()
                 .containerBackground(.fill.tertiary, for: .widget)
         }
         .configurationDisplayName("FitTime")

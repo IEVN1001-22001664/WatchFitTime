@@ -10,11 +10,18 @@ struct WorkView: View {
             let engine = controller.engine
             let elapsed = engine.setElapsed(at: context.date)
 
-            VStack(spacing: 4) {
-                HStack {
-                    Text("SERIE \(engine.currentSetNumber)")
-                        .font(.headline)
-                        .foregroundStyle(.green)
+            VStack(spacing: 2) {
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text("SERIE \(engine.currentSetNumber)")
+                            .font(.headline)
+                            .foregroundStyle(.green)
+                        if engine.lastReps > 0 {
+                            Text("Anterior: \(engine.lastReps) \(engine.lastReps == 1 ? "rep" : "reps")")
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
                     Spacer()
                     Label(engine.totalElapsed(at: context.date).clockString, systemImage: "clock")
                         .font(.caption2)
@@ -43,19 +50,10 @@ struct WorkView: View {
                 Button(action: controller.finishSet) {
                     Label("Terminar serie", systemImage: "stop.fill")
                         .font(.headline)
-                        .frame(maxWidth: .infinity, minHeight: 44)
+                        .frame(maxWidth: .infinity, minHeight: 38)
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.orange)
-            }
-            .overlay(alignment: .bottom) {
-                // Encima del botón, sin quitarle altura al cronómetro.
-                if engine.lastReps > 0 {
-                    Text("Anterior: \(engine.lastReps) \(engine.lastReps == 1 ? "rep" : "reps")")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                        .padding(.bottom, 48)
-                }
             }
         }
     }
