@@ -1,7 +1,7 @@
 // Genera el isotipo de FitTime.
 // Uso: swift Design/render_icon.swift <carpeta-de-salida>
-// Produce AppIcon-1024.png (opaco, para watchOS/iOS) y Glyph.png (blanco
-// sobre transparente, para complicaciones).
+// Produce AppIcon-1024.png (opaco, para watchOS/iOS) y Glyph@2x/@3x.png (blanco
+// sobre transparente, para complicaciones: 50 pt, WidgetKit rechaza imágenes grandes).
 import AppKit
 
 let green = NSColor(srgbRed: 0.196, green: 0.839, blue: 0.267, alpha: 1)
@@ -86,4 +86,5 @@ func render(size: CGFloat, opaque: Bool, to url: URL) {
 
 let out = URL(fileURLWithPath: CommandLine.arguments[1])
 render(size: 1024, opaque: true, to: out.appendingPathComponent("AppIcon-1024.png"))
-render(size: 256, opaque: false, to: out.appendingPathComponent("Glyph.png"))
+render(size: 100, opaque: false, to: out.appendingPathComponent("Glyph@2x.png"))
+render(size: 150, opaque: false, to: out.appendingPathComponent("Glyph@3x.png"))

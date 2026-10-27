@@ -29,7 +29,7 @@ Entregables:
 3. Capas separadas para Icon Composer (iOS/watchOS 26, Liquid Glass):
    fondo, anillo y mancuerna como SVG independientes.
 4. Glifo monocromo para complicaciones de la carátula: solo blanco sobre
-   transparente, SVG (o PNG 256×256), legible a 40 px.
+   transparente, SVG (o PNG de 100×100 y 150×150), legible a 40 px.
 ```
 
 ## Medidas de referencia
@@ -40,9 +40,9 @@ Entregables:
 | App iOS (claro) | 1024×1024 | PNG sin alfa | Sin esquinas redondeadas |
 | App iOS (oscuro / tintado) | 1024×1024 | PNG con transparencia | iOS 18+ |
 | Icon Composer | capas | SVG | iOS/watchOS 26 |
-| Complicación | 256×256 o vector | PNG/SVG blanco, transparente | Se tiñe según la carátula |
+| Complicación | 100×100 y 150×150 (50 pt) o vector | PNG/SVG blanco, transparente | Se tiñe según la carátula |
 | App Store | 1024×1024 | PNG sin alfa | El mismo ícono principal |
 
 Para reemplazar el ícono basta con sustituir
 `WatchFitTime/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png` y
-`WatchFitTimeWidget/Assets.xcassets/Glyph.imageset/Glyph.png`.
+`WatchFitTimeWidget/Assets.xcassets/Glyph.imageset/Glyph@2x.png` y `@3x` (100 y 150 px: WidgetKit rechaza glifos de más de ~110 pt).
