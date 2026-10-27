@@ -39,7 +39,7 @@ struct SetupView: View {
             .buttonStyle(.borderedProminent)
             .tint(.green)
         }
-        .navigationTitle("WatchFitTime")
+        .navigationTitle("FitTime")
         .onAppear { crown = controller.restDuration }
         .onChange(of: crown) { _, value in controller.restDuration = value }
     }

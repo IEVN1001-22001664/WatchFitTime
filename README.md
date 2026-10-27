@@ -1,4 +1,6 @@
-# WatchFitTime
+# FitTime
+
+*(repositorio: WatchFitTime)*
 
 App para Apple Watch (watchOS 10+, SwiftUI) para controlar tiempos de series y descansos en el gimnasio u otros deportes.
 
@@ -18,10 +20,16 @@ WatchFitTime/
   Model/WorkoutController.swift  Reloj interno, vibraciones, segundo plano
   Services/                      Haptics, sesión en segundo plano, notificación de respaldo
   Views/                         Setup, Work (cronómetro), Rest (descanso), Summary
-Config/Info.plist                WKBackgroundModes = physical-therapy
+WatchFitTimeWidget/              Complicación de carátula (atajo que abre la app)
+Config/                          Info.plist de la app y del widget
+Design/                          Isotipo: generador, PNG y prompt para Claude Design
 ```
 
 La app sigue corriendo con la muñeca bajada gracias a una `WKExtendedRuntimeSession` (tipo *physical-therapy*). Si el sistema la suspende, una notificación local avisa del fin del descanso.
+
+## Complicación
+
+Mantén presionada la carátula › Editar › Complicaciones › **FitTime**. Disponible en círculo, esquina, rectangular y en línea.
 
 ## Compilar
 
